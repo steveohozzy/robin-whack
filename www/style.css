@@ -372,15 +372,25 @@ body{
 
 #startScreen h1 {
 
-    font-size: 22px;
+    font-size: 18px;
 
     margin-bottom: 8px;
 
     color: #143766;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+#startScreen h1 img:nth-child(2) {
+    transform: scaleX(-1);
 }
 
 #startScreen p {
     color: #718096;
+    font-size: 14px;
 }
 
 
@@ -702,11 +712,6 @@ body{
 #gameOver button:active {
 
     transform: scale(.96);
-}
-
-#startScreen h1 {
-    font-size: 22px;
-    margin-bottom: 8px;
 }
 
 .instructions {
