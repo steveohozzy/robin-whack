@@ -7,7 +7,7 @@ const holes = [];
 const cols = 4;
 
 let score = 0;
-let timeLeft = 60;
+let timeLeft = 30;
 let gameRunning = false;
 let gameStarted = false;
 
@@ -408,8 +408,8 @@ resizeGame();
 window.addEventListener("resize", resizeGame);
 
 function getCurrentUpTime(){
-    const clampedTime = Math.max(0, Math.min(60, timeLeft));
-    const progress = clampedTime / 60;
+    const clampedTime = Math.max(0, Math.min(30, timeLeft));
+    const progress = clampedTime / 30;
     return 550 + (950 * progress);
 }
 
@@ -571,7 +571,7 @@ function restartFromPause(){
 
 function restartGame(){
     score = 0;
-    timeLeft = 60;
+    timeLeft = 30;
     combo = 0;
     maxCombo = 0;
     lastHitTime = 0;
