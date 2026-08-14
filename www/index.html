@@ -50,18 +50,26 @@
 
   <div id="game">
 
+    <div id="particles"></div>
+
     <div id="startScreen">
-      <h1>🐦 Robin Whack-A-Worm</h1>
-      <p>Tap the worms to catch them!</p>
+        <h1>🐦 Robin Whack-A-Worm</h1>
 
-      <div class="instructions">
-        💥 <b>Tap Worms</b> to catch them!<br><br>
-        🪱 Normal Pink Worm = 1 Pt<br>
-        ⚡ Blue Worm = 2 Pts (Fast!)<br>
-        ⭐ Golden Worm = Rare! (+5s Time)
-      </div>
+        <p>Tap the worms to catch them!</p>
 
-      <button id="startBtn" onclick="startGame()">Start Game</button>
+        <div class="highScore">
+            🏆 Best Score:
+            <span id="highScoreValue">0</span>
+        </div>
+
+        <div class="instructions">
+            💥 <b>Tap Worms</b> to catch them!<br><br>
+            🪱 Normal Pink Worm = 1 Pt<br>
+            ⚡ Blue Worm = 2 Pts (Fast!)<br>
+            ⭐ Golden Worm = Rare! (+5s Time)
+        </div>
+
+        <button id="startBtn" onclick="startGame()">Start Game</button>
     </div>
 
     <div id="snow"></div>

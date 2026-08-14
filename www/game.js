@@ -21,6 +21,11 @@ let lastHitTime = 0;
 
 const COMBO_WINDOW = 1500;
 
+let highScore = Number(localStorage.getItem("robinWhackHighScore")) || 0;
+let difficultyLevel = 1;
+
+document.getElementById("highScoreValue").textContent = highScore;
+
 // ============================================================
 // SOUND SYSTEM
 // ============================================================
@@ -65,9 +70,10 @@ const timerLoop = setInterval(() => {
 function startGame(){
     gameStarted = true;
     gameRunning = true;
-    combo = 0;
-    maxCombo = 0;
-    lastHitTime = 0;
+
+    difficultyLevel = 1;
+
+    startSpawning();
 
     document.getElementById("startScreen").style.display = "none";
 
@@ -77,6 +83,8 @@ function startGame(){
 function addScore(points = 1){
     score += points;
     document.getElementById("scoreValue").textContent = score;
+
+    updateDifficulty();
 }
 
 function applyPowerUp(type){
@@ -109,7 +117,20 @@ function showBonusText(text, color){
 function endGame(){
     gameRunning = false;
 
+    clearInterval(spawnTimer);
+
     playSound("gameover");
+
+    if (score > highScore) {
+        highScore = score;
+
+        localStorage.setItem(
+            "robinWhackHighScore",
+            highScore
+        );
+
+        document.getElementById("highScoreValue").textContent = highScore;
+    }
 
     document.getElementById("finalScore").textContent = score;
     document.getElementById("gameOver").style.display = "block";
@@ -138,6 +159,14 @@ function targetHole(hole) {
             registerCombo();
 
             applyPowerUp(hole.type);
+
+            createHitParticles(
+                hole.x,
+                window.innerHeight - hole.bottom - 20,
+                hole.type
+            );
+
+            screenShake();
 
             if (hole.type === "golden") {
                 playSound("golden");
@@ -324,6 +353,10 @@ function restartGame(){
     maxCombo = 0;
     lastHitTime = 0;
     gameRunning = true;
+    gameStarted = true;
+
+    difficultyLevel = 1;
+    startSpawning();
 
     document.getElementById("scoreValue").textContent = score;
     timerDisplay.textContent = "⏱ " + timeLeft;
@@ -380,4 +413,99 @@ setInterval(() => {
     }
 }, 250);
 
-setInterval(spawnWorm, 650);
+function createHitParticles(x, y, type) {
+    const container = document.getElementById("particles");
+
+    let count = 10;
+
+    if (type === "fast") {
+        count = 14;
+    }
+
+    if (type === "golden") {
+        count = 22;
+    }
+
+    for (let i = 0; i < count; i++) {
+        const particle = document.createElement("div");
+
+        particle.className = "particle";
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 30 + Math.random() * 45;
+
+        const dx = Math.cos(angle) * distance;
+        const dy = Math.sin(angle) * distance;
+
+        particle.style.left = x + "px";
+        particle.style.top = y + "px";
+
+        particle.style.setProperty("--dx", dx);
+        particle.style.setProperty("--dy", dy);
+
+        const size = 4 + Math.random() * 6;
+
+        particle.style.width = size + "px";
+        particle.style.height = size + "px";
+
+        if (type === "golden") {
+            particle.textContent = "⭐";
+            particle.style.width = "auto";
+            particle.style.height = "auto";
+            particle.style.fontSize = (12 + Math.random() * 8) + "px";
+            particle.style.background = "transparent";
+        } else {
+            particle.style.background =
+                type === "fast"
+                    ? "#38bdf8"
+                    : "#ffffff";
+        }
+
+        container.appendChild(particle);
+
+        setTimeout(() => {
+            particle.remove();
+        }, 600);
+    }
+}
+
+function screenShake() {
+    gameContainer.classList.remove("shake");
+
+    void gameContainer.offsetWidth;
+
+    gameContainer.classList.add("shake");
+}
+
+let spawnTimer;
+
+function startSpawning() {
+    clearInterval(spawnTimer);
+
+    spawnTimer = setInterval(() => {
+        spawnWorm();
+    }, getSpawnInterval());
+}
+
+function getSpawnInterval() {
+    return Math.max(
+        300,
+        700 - ((difficultyLevel - 1) * 60)
+    );
+}
+
+function updateDifficulty() {
+    const newLevel =
+        Math.floor(score / 10) + 1;
+
+    if (newLevel !== difficultyLevel) {
+        difficultyLevel = newLevel;
+
+        startSpawning();
+
+        showBonusText(
+            "LEVEL " + difficultyLevel + "!",
+            "#ffffff"
+        );
+    }
+}
