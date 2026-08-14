@@ -27,11 +27,27 @@ let difficultyLevel = 1;
 let gamePaused = false;
 let pausedAt = 0;
 
+let soundEnabled =
+    localStorage.getItem("robinSound") !== "false";
+
+let musicEnabled =
+    localStorage.getItem("robinMusic") !== "false";
+
+let hapticsEnabled =
+    localStorage.getItem("robinHaptics") !== "false";
+
 document.getElementById("highScoreValue").textContent = highScore;
 
 // ============================================================
 // SOUND SYSTEM
 // ============================================================
+
+const backgroundMusic = new Audio("./assets/sounds/music.mp3");
+
+let musicFadeTimer = null;
+
+backgroundMusic.loop = true;
+backgroundMusic.volume = 0;
 
 const sounds = {
     hit: new Audio("./assets/sounds/hit.mp3"),
@@ -93,6 +109,8 @@ function startGame(){
 
     playSound("start");
 
+    startMusic();
+
     gamePaused = false;
 }
 
@@ -133,6 +151,8 @@ function showBonusText(text, color){
 function endGame(){
 
     gameRunning = false;
+
+    fadeMusicOut();
 
     clearInterval(spawnTimer);
 
@@ -214,6 +234,18 @@ function targetHole(hole) {
             hole.occupied = false;
 
             addScore(hole.points);
+
+            if(hapticsEnabled && navigator.vibrate){
+
+                if(hole.type === "golden"){
+                    navigator.vibrate([30, 40, 60]);
+                } else if(hole.type === "fast"){
+                    navigator.vibrate(25);
+                } else {
+                    navigator.vibrate(15);
+                }
+
+            }
 
             registerCombo();
 
@@ -384,7 +416,105 @@ function spawnWorm(){
         return;
     }
 
-    // rest of function...
+    // Find available holes
+    const availableHoles = holes.filter(hole => !hole.occupied);
+
+    if(availableHoles.length === 0) {
+        return;
+    }
+
+    // Pick a random available hole
+    const hole =
+        availableHoles[
+            Math.floor(Math.random() * availableHoles.length)
+        ];
+
+    // --------------------------------------------------------
+    // CHOOSE WORM TYPE
+    // --------------------------------------------------------
+
+    const random = Math.random();
+
+    let type = "normal";
+
+    if(random < 0.10){
+        type = "golden";
+    } else if(random < 0.30){
+        type = "fast";
+    }
+
+    // --------------------------------------------------------
+    // SET WORM TYPE
+    // --------------------------------------------------------
+
+    hole.type = type;
+
+    if(type === "golden"){
+        hole.points = 5;
+    } else if(type === "fast"){
+        hole.points = 2;
+    } else {
+        hole.points = 1;
+    }
+
+    // IMPORTANT:
+    // Set the class BEFORE adding "up".
+    // This stops a worm changing colour while it is appearing.
+    hole.worm.className =
+        "worm-wrapper " + type;
+
+    // New spawn ID prevents an old timeout from affecting
+    // a newer worm occupying the same hole.
+    hole.spawnId++;
+
+    const thisSpawnId = hole.spawnId;
+
+    hole.occupied = true;
+
+    // --------------------------------------------------------
+    // ANIMATION
+    // --------------------------------------------------------
+
+    hole.worm.classList.remove("up", "caught");
+
+    // Force the browser to recognise the reset
+    void hole.worm.offsetWidth;
+
+    hole.worm.classList.add("up");
+
+    // --------------------------------------------------------
+    // HOW LONG THE WORM STAYS UP
+    // --------------------------------------------------------
+
+    let upTime = getCurrentUpTime();
+
+    if(type === "fast"){
+        upTime *= 0.65;
+    }
+
+    if(type === "golden"){
+        upTime *= 1.15;
+    }
+
+    // Make sure they don't disappear ridiculously quickly
+    upTime = Math.max(650, upTime);
+
+    setTimeout(() => {
+
+        // Only remove the worm if this is still
+        // the same spawn.
+        if(
+            hole.spawnId !== thisSpawnId ||
+            !hole.occupied
+        ){
+            return;
+        }
+
+        hole.worm.classList.remove("up");
+
+        hole.occupied = false;
+
+    }, upTime);
 }
 
 function togglePause(){
@@ -396,6 +526,7 @@ function togglePause(){
     const pauseScreen =
         document.getElementById("pauseScreen");
 
+
     if(gamePaused){
 
         pauseScreen.style.display = "block";
@@ -404,7 +535,7 @@ function togglePause(){
             "pauseBtn"
         ).textContent = "▶";
 
-        playSound("start");
+        fadeMusicOut();
 
     } else {
 
@@ -414,7 +545,7 @@ function togglePause(){
             "pauseBtn"
         ).textContent = "⏸";
 
-        playSound("start");
+        updateMusicState();
 
     }
 
@@ -597,3 +728,229 @@ function updateDifficulty() {
         );
     }
 }
+
+function toggleSettings(){
+
+    const panel =
+        document.getElementById("settingsPanel");
+
+    if(panel.style.display === "block"){
+        panel.style.display = "none";
+    } else {
+        panel.style.display = "block";
+    }
+
+}
+
+function toggleSound(){
+
+    soundEnabled = !soundEnabled;
+
+    localStorage.setItem(
+        "robinSound",
+        soundEnabled
+    );
+
+    updateSettingsUI();
+
+    if(soundEnabled){
+        playSound("hit");
+    }
+
+}
+
+function toggleMusic(){
+
+    musicEnabled = !musicEnabled;
+
+    localStorage.setItem(
+        "robinMusic",
+        musicEnabled
+    );
+
+    updateSettingsUI();
+
+    updateMusicState();
+
+}
+
+function toggleHaptics(){
+
+    hapticsEnabled = !hapticsEnabled;
+
+    localStorage.setItem(
+        "robinHaptics",
+        hapticsEnabled
+    );
+
+    updateSettingsUI();
+
+    if(hapticsEnabled && navigator.vibrate){
+        navigator.vibrate(30);
+    }
+
+}
+
+function updateSettingsUI(){
+
+    const soundButton =
+        document.getElementById("soundToggle");
+
+    const musicButton =
+        document.getElementById("musicToggle");
+
+    const hapticsButton =
+        document.getElementById("hapticsToggle");
+
+
+    soundButton.textContent =
+        soundEnabled ? "ON" : "OFF";
+
+    soundButton.classList.toggle(
+        "active",
+        soundEnabled
+    );
+
+
+    musicButton.textContent =
+        musicEnabled ? "ON" : "OFF";
+
+    musicButton.classList.toggle(
+        "active",
+        musicEnabled
+    );
+
+
+    hapticsButton.textContent =
+        hapticsEnabled ? "ON" : "OFF";
+
+    hapticsButton.classList.toggle(
+        "active",
+        hapticsEnabled
+    );
+
+}
+
+updateSettingsUI();
+
+function fadeMusicIn(){
+
+    if(musicFadeTimer){
+        clearInterval(musicFadeTimer);
+    }
+
+    backgroundMusic.volume = 0;
+
+    musicFadeTimer = setInterval(() => {
+
+        if(
+            backgroundMusic.paused ||
+            !musicEnabled ||
+            gamePaused
+        ){
+
+            clearInterval(musicFadeTimer);
+
+            musicFadeTimer = null;
+
+            return;
+        }
+
+        if(backgroundMusic.volume >= 0.35){
+
+            backgroundMusic.volume = 0.35;
+
+            clearInterval(musicFadeTimer);
+
+            musicFadeTimer = null;
+
+            return;
+        }
+
+        backgroundMusic.volume += 0.03;
+
+    }, 80);
+}
+
+function fadeMusicOut(){
+
+    if(musicFadeTimer){
+
+        clearInterval(musicFadeTimer);
+
+        musicFadeTimer = null;
+    }
+
+    musicFadeTimer = setInterval(() => {
+
+        if(backgroundMusic.volume <= 0.03){
+
+            backgroundMusic.volume = 0;
+
+            backgroundMusic.pause();
+
+            clearInterval(musicFadeTimer);
+
+            musicFadeTimer = null;
+
+            return;
+        }
+
+        backgroundMusic.volume -= 0.03;
+
+    }, 50);
+}
+
+function updateMusicState(){
+
+    if(!musicEnabled){
+
+        fadeMusicOut();
+
+        return;
+    }
+
+    if(
+        gameRunning &&
+        gameStarted &&
+        !gamePaused
+    ){
+
+        if(backgroundMusic.paused){
+
+            backgroundMusic
+                .play()
+                .then(() => {
+                    fadeMusicIn();
+                })
+                .catch(() => {});
+
+        }
+
+    }
+
+}
+
+function startMusic(){
+
+    if(!musicEnabled) return;
+
+    backgroundMusic.currentTime = 0;
+
+    backgroundMusic
+        .play()
+        .then(() => {
+
+            fadeMusicIn();
+
+        })
+        .catch(error => {
+
+            console.log(
+                "Music could not start:",
+                error
+            );
+
+        });
+}
+

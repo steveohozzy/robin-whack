@@ -105,6 +105,9 @@
         <button id="pauseBtn" onclick="togglePause()" aria-label="Pause game">
             ⏸
         </button>
+        <button id="settingsBtn" onclick="toggleSettings()" aria-label="Settings">
+            ⚙️
+        </button>
     </div>
 
     <div id="holes"></div>
@@ -159,6 +162,72 @@
         </button>
 
     </div>
+
+    <div id="settingsPanel">
+
+    <div class="settingsHeader">
+        <h2>⚙️ Settings</h2>
+
+        <button
+            class="settingsClose"
+            onclick="toggleSettings()"
+        >
+            ✕
+        </button>
+    </div>
+
+    <div class="settingRow">
+
+        <div>
+            <strong>🔊 Sound Effects</strong>
+            <small>Worms, hits and bonuses</small>
+        </div>
+
+        <button
+            id="soundToggle"
+            class="toggleButton active"
+            onclick="toggleSound()"
+        >
+            ON
+        </button>
+
+    </div>
+
+    <div class="settingRow">
+
+        <div>
+            <strong>🎵 Music</strong>
+            <small>Background music</small>
+        </div>
+
+        <button
+            id="musicToggle"
+            class="toggleButton active"
+            onclick="toggleMusic()"
+        >
+            ON
+        </button>
+
+    </div>
+
+    <div class="settingRow">
+
+        <div>
+            <strong>📳 Haptics</strong>
+            <small>Phone vibration feedback</small>
+        </div>
+
+        <button
+            id="hapticsToggle"
+            class="toggleButton active"
+            onclick="toggleHaptics()"
+        >
+            ON
+        </button>
+
+    </div>
+
+</div>
 
   </div>
 
