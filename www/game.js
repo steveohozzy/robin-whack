@@ -782,8 +782,23 @@ function toggleMusic(){
 
     updateSettingsUI();
 
-    updateMusicState();
+    if(!musicEnabled){
 
+        // Stop immediately when the player turns music off
+        if(musicFadeTimer){
+            clearInterval(musicFadeTimer);
+            musicFadeTimer = null;
+        }
+
+        backgroundMusic.pause();
+        backgroundMusic.currentTime = 0;
+        backgroundMusic.volume = 0;
+
+        return;
+    }
+
+    // Music has been turned back on
+    updateMusicState();
 }
 
 function toggleHaptics(){
