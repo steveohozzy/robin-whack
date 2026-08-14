@@ -53,7 +53,7 @@ body{
     left:0;
     width:100%;
     height:calc(var(--ground-height) * var(--scale));
-    background-image:url('https://www.thetoyshop.com/medias/edited-photo-55-.png?context=bWFzdGVyfHJvb3R8MTQxOTI5MHxpbWFnZS9wbmd8YURneEwyaG1PUzh4TWpnek1qRTRNVGcwTmpBME5pOWxaR2wwWldRdGNHaHZkRzhnS0RVMUtTNXdibWN8ZGU0NjU3ZWU0OTFhYTQ1ODJjZTg2MDNkMzJlOWQ2ZTMxMDYxMTdhOGJiOTgwMTQ0YzdlODdjOWJmNDQ1YjI0ZA');
+    background-image:url('assets/ground.png');
     background-size:cover;
     background-position:center;
     background-repeat:no-repeat;

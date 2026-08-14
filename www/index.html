@@ -1,13 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#143766">
 
-  <title>Robin Whack-A-Worm</title>
+    <meta charset="UTF-8">
 
-  <link rel="stylesheet" href="style.css">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta name="theme-color" content="#143766">
+
+    <meta
+        name="description"
+        content="Tap the worms before time runs out in Robin Whack-A-Worm!"
+    >
+
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="black-translucent"
+    >
+
+    <meta
+        name="apple-mobile-web-app-title"
+        content="Robin Whack"
+    >
+
+    <link rel="manifest" href="manifest.json">
+
+    <link
+        rel="apple-touch-icon"
+        href="assets/icon-192.png"
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>Robin Whack-A-Worm</title>
+
 </head>
 <body>
 
@@ -37,7 +74,7 @@
     <div id="holes"></div>
 
     <img id="robin"
-         src="assets/Robbin.png"
+         src="./assets/robbin.png"
          draggable="false">
 
     <div id="ground"></div>
@@ -51,5 +88,16 @@
   </div>
 
   <script src="game.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker
+                .register("./sw.js")
+                .catch(error => {
+                    console.error("Service worker registration failed:", error);
+                });
+        });
+    }
+  </script>
 </body>
 </html>
