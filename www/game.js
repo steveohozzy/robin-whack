@@ -259,7 +259,8 @@ for(let col = 0; col < cols; col++){
         bottom: 0,
         occupied: false,
         type: "normal",
-        points: 1
+        points: 1,
+        spawnId: 0
     };
 
     hitArea.addEventListener("pointerdown", (e) => {
@@ -318,31 +319,66 @@ function spawnWorm(){
     if(!gameRunning || !gameStarted) return;
 
     const available = holes.filter(h => !h.occupied);
+
     if(!available.length) return;
 
     const hole = available[Math.floor(Math.random() * available.length)];
+
+    // Give this worm spawn a unique ID
+    hole.spawnId++;
+
+    const thisSpawnId = hole.spawnId;
+
     let chance = Math.random();
 
-    if(chance < 0.05){          // Golden
+    if(chance < 0.05){
+        // Golden
         hole.type = "golden";
         hole.points = 3;
-    } else if(chance < 0.15){   // Fast
+
+    } else if(chance < 0.15){
+        // Fast
         hole.type = "fast";
         hole.points = 2;
-    } else {                    // Normal Pink
+
+    } else {
+        // Normal
         hole.type = "normal";
         hole.points = 1;
     }
 
-    hole.worm.className = "worm-wrapper " + hole.type + " up";
+    // Make absolutely sure old classes are removed
+    hole.worm.className = "worm-wrapper " + hole.type;
+
+    // Force the browser to recognise this as a fresh worm
+    void hole.worm.offsetWidth;
+
+    hole.worm.classList.add("up");
+
     hole.occupied = true;
 
     let disappearTime = getCurrentUpTime();
-    if(hole.type === "fast") disappearTime *= 0.55;
+
+    if(hole.type === "fast"){
+        disappearTime *= 0.7;
+    }
 
     setTimeout(() => {
+
+        // Ignore this timeout if the hole has since
+        // been reused for another worm
+        if(hole.spawnId !== thisSpawnId){
+            return;
+        }
+
+        if(!hole.occupied){
+            return;
+        }
+
         hole.worm.classList.remove("up");
+
         hole.occupied = false;
+
     }, disappearTime);
 }
 
@@ -489,14 +525,14 @@ function startSpawning() {
 
 function getSpawnInterval() {
     return Math.max(
-        300,
-        700 - ((difficultyLevel - 1) * 60)
+        450,
+        750 - ((difficultyLevel - 1) * 35)
     );
 }
 
 function updateDifficulty() {
     const newLevel =
-        Math.floor(score / 10) + 1;
+        Math.floor(score / 15) + 1;
 
     if (newLevel !== difficultyLevel) {
         difficultyLevel = newLevel;
