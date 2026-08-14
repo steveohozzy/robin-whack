@@ -1,4 +1,4 @@
-const CACHE_NAME = "robin-whack-v7";
+const CACHE_NAME = "robin-whack-v8";
 
 const ASSETS = [
     "./",
