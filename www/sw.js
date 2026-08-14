@@ -1,4 +1,4 @@
-const CACHE_NAME = "robin-whack-v3";
+const CACHE_NAME = "robin-whack-v4";
 
 const ASSETS = [
     "./",
@@ -12,7 +12,16 @@ const ASSETS = [
 
     "./assets/icon-192.png",
     "./assets/icon-512.png",
-    "./assets/icon-1024.png"
+    "./assets/icon-1024.png",
+
+    "./assets/sounds/hit.mp3",
+    "./assets/sounds/fast.mp3",
+    "./assets/sounds/golden.mp3",
+    "./assets/sounds/combo.mp3",
+    "./assets/sounds/start.mp3",
+    "./assets/sounds/gameover.mp3",
+    "./assets/sounds/countdown.mp3",
+    "./assets/sounds/bonus.mp3"
 ];
 
 self.addEventListener("install", event => {

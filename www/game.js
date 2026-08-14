@@ -15,6 +15,43 @@ let x = window.innerWidth / 2;
 let facing = 1;
 let pecking = false;
 
+let combo = 0;
+let maxCombo = 0;
+let lastHitTime = 0;
+
+const COMBO_WINDOW = 1500;
+
+// ============================================================
+// SOUND SYSTEM
+// ============================================================
+
+const sounds = {
+    hit: new Audio("./assets/sounds/hit.mp3"),
+    fast: new Audio("./assets/sounds/fast.mp3"),
+    golden: new Audio("./assets/sounds/golden.mp3"),
+    combo: new Audio("./assets/sounds/combo.mp3"),
+    start: new Audio("./assets/sounds/start.mp3"),
+    gameover: new Audio("./assets/sounds/gameover.mp3"),
+    countdown: new Audio("./assets/sounds/countdown.mp3"),
+    bonus: new Audio("./assets/sounds/bonus.mp3")
+};
+
+Object.values(sounds).forEach(sound => {
+    sound.preload = "auto";
+});
+
+function playSound(name) {
+    const sound = sounds[name];
+
+    if (!sound) return;
+
+    sound.currentTime = 0;
+
+    sound.play().catch(() => {
+        // Audio can be blocked until the player interacts.
+    });
+}
+
 const timerLoop = setInterval(() => {
     if(!gameRunning || !gameStarted) return;
     timeLeft--;
@@ -28,7 +65,13 @@ const timerLoop = setInterval(() => {
 function startGame(){
     gameStarted = true;
     gameRunning = true;
+    combo = 0;
+    maxCombo = 0;
+    lastHitTime = 0;
+
     document.getElementById("startScreen").style.display = "none";
+
+    playSound("start");
 }
 
 function addScore(points = 1){
@@ -39,8 +82,12 @@ function addScore(points = 1){
 function applyPowerUp(type){
     if(type === "golden"){
         timeLeft += 5;
+
         timerDisplay.textContent = "⏱ " + timeLeft;
+
         showBonusText("+5s ⏱️", "#72ff72");
+
+        playSound("bonus");
     }
 }
 
@@ -61,6 +108,9 @@ function showBonusText(text, color){
 
 function endGame(){
     gameRunning = false;
+
+    playSound("gameover");
+
     document.getElementById("finalScore").textContent = score;
     document.getElementById("gameOver").style.display = "block";
 }
@@ -84,7 +134,18 @@ function targetHole(hole) {
             hole.occupied = false;
 
             addScore(hole.points);
+
+            registerCombo();
+
             applyPowerUp(hole.type);
+
+            if (hole.type === "golden") {
+                playSound("golden");
+            } else if (hole.type === "fast") {
+                playSound("fast");
+            } else {
+                playSound("hit");
+            }
 
             setTimeout(() => { hole.worm.classList.remove("caught"); }, 400);
             showPoints(hole.x, hole.bottom, hole.points);
@@ -259,6 +320,9 @@ function spawnWorm(){
 function restartGame(){
     score = 0;
     timeLeft = 60;
+    combo = 0;
+    maxCombo = 0;
+    lastHitTime = 0;
     gameRunning = true;
 
     document.getElementById("scoreValue").textContent = score;
@@ -270,5 +334,50 @@ function restartGame(){
         hole.worm.classList.remove("up", "caught");
     });
 }
+
+function registerCombo() {
+    const now = Date.now();
+
+    if (now - lastHitTime <= COMBO_WINDOW) {
+        combo++;
+    } else {
+        combo = 1;
+    }
+
+    lastHitTime = now;
+
+    if (combo > maxCombo) {
+        maxCombo = combo;
+    }
+
+    const comboElement = document.getElementById("combo");
+
+    if (combo >= 2) {
+        comboElement.textContent = "🔥 " + combo + " COMBO!";
+
+        comboElement.classList.remove("pop");
+
+        // Force animation restart
+        void comboElement.offsetWidth;
+
+        comboElement.classList.add("show", "pop");
+
+        if (combo === 3 || combo === 5 || combo % 5 === 0) {
+            playSound("combo");
+        }
+    }
+}
+
+setInterval(() => {
+    if (!gameRunning) return;
+
+    if (combo > 0 && Date.now() - lastHitTime > COMBO_WINDOW) {
+        combo = 0;
+
+        const comboElement = document.getElementById("combo");
+
+        comboElement.classList.remove("show");
+    }
+}, 250);
 
 setInterval(spawnWorm, 650);
