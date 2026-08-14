@@ -11,6 +11,8 @@ let timeLeft = 60;
 let gameRunning = false;
 let gameStarted = false;
 
+let wormsCaught = 0;
+
 let x = window.innerWidth / 2;
 let facing = 1;
 let pecking = false;
@@ -186,6 +188,10 @@ function endGame(){
     ).textContent = maxCombo;
 
     document.getElementById(
+        "finalWorms"
+    ).textContent = wormsCaught;
+
+    document.getElementById(
         "finalLevel"
     ).textContent = difficultyLevel;
 
@@ -234,6 +240,7 @@ function targetHole(hole) {
             hole.occupied = false;
 
             addScore(hole.points);
+            wormsCaught++;
 
             if(hapticsEnabled && navigator.vibrate){
 
@@ -568,6 +575,7 @@ function restartGame(){
     combo = 0;
     maxCombo = 0;
     lastHitTime = 0;
+    wormsCaught = 0;
     gameRunning = true;
     gameStarted = true;
 
@@ -585,6 +593,10 @@ function restartGame(){
         hole.occupied = false;
         hole.worm.classList.remove("up", "caught");
     });
+
+    if (musicEnabled) {
+        startMusic();
+    }
 }
 
 function registerCombo() {

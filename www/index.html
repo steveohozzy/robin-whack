@@ -63,11 +63,42 @@
         </div>
 
         <div class="instructions">
-            💥 <b>Tap Worms</b> to catch them!<br><br>
-            🪱 Normal Pink Worm = 1 Pt<br>
-            ⚡ Blue Worm = 2 Pts (Fast!)<br>
-            ⭐ Golden Worm = Rare! (+5s Time)
-        </div>
+
+          💥 <b>Tap Worms</b> to catch them!<br><br>
+
+          <span class="wormInstruction">
+              <span class="miniWorm normal">
+                  <span class="miniWormHead">
+    <span class="miniWormBand"></span>
+</span>
+                  <span class="miniWormBody"></span>
+              </span>
+              <b>Normal Pink Worm</b> = 1 Pt
+          </span>
+
+          <br>
+
+          <span class="wormInstruction">
+              <span class="miniWorm fast">
+                  <span class="miniWormHead">
+    <span class="miniWormBand"></span>
+</span>
+                  <span class="miniWormBody"></span>
+              </span>
+              <b>Blue Worm</b> = 2 Pts (Fast!)
+          </span>
+
+          <br>
+
+          <span class="wormInstruction">
+              <span class="miniWorm golden">
+                  <span class="miniWormHead"></span>
+                  <span class="miniWormBody"></span>
+              </span>
+              <b>Golden Worm</b> = Rare! (+5s Time)
+          </span>
+
+      </div>
 
         <button id="startBtn" onclick="startGame()">Start Game</button>
     </div>
@@ -137,25 +168,36 @@
 
         <div class="scoreStats">
 
-            <div class="scoreStat">
-                <span>🏆</span>
-                <small>Best</small>
-                <strong id="finalHighScore">0</strong>
-            </div>
+          <div class="scoreStat">
+              <span>🏆</span>
+              <small>Best</small>
+              <strong id="finalHighScore">0</strong>
+          </div>
 
-            <div class="scoreStat">
-                <span>🔥</span>
-                <small>Best Combo</small>
-                <strong id="finalCombo">0</strong>
-            </div>
+          <div class="scoreStat">
+              <span>🔥</span>
+              <small>Best Combo</small>
+              <strong id="finalCombo">0</strong>
+          </div>
 
-            <div class="scoreStat">
-                <span>📈</span>
-                <small>Level</small>
-                <strong id="finalLevel">1</strong>
-            </div>
-
+          <div class="scoreStat">
+            <span class="wormStatIcon">
+                <span class="miniWorm">
+                    <span class="miniWormHead"></span>
+                    <span class="miniWormBody"></span>
+                </span>
+            </span>
+            <small>Worms</small>
+            <strong id="finalWorms">0</strong>
         </div>
+
+          <div class="scoreStat">
+              <span>📈</span>
+              <small>Level</small>
+              <strong id="finalLevel">1</strong>
+          </div>
+
+      </div>
 
         <button onclick="restartGame()">
             Play Again

@@ -330,21 +330,378 @@ body{
     text-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 
-#startScreen, #gameOver {
+/* ============================================================
+   GAME PANELS
+   ============================================================ */
+
+#startScreen,
+#gameOver,
+#pauseScreen,
+#settingsPanel {
+
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 90%;
+    max-width: 340px;
+
+    padding: 22px 24px;
+
+    background: #ffffff;
+
+    border-radius: 20px;
+
+    text-align: center;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.35);
+
+    color: #143766;
+}
+
+
+/* START SCREEN */
+
+#startScreen {
+    z-index: 60;
+}
+
+#startScreen h1 {
+
+    font-size: 22px;
+
+    margin-bottom: 8px;
+
+    color: #143766;
+}
+
+#startScreen p {
+    color: #718096;
+}
+
+
+/* ============================================================
+   GAME OVER
+   ============================================================ */
+
+#gameOver {
+    display: none;
+
     position: absolute;
     top: 50%;
     left: 50%;
+
     transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px 25px;
-    border-radius: 20px;
+
+    width: min(90%, 350px);
+
+    padding: 24px 22px 22px;
+
+    background: #ffffff;
+
+    border-radius: 24px;
+
     text-align: center;
-    z-index: 60;
-    box-shadow: 0 15px 40px rgba(0,0,0,.35);
-    width: 90%;
-    max-width: 340px;
+
+    color: #143766;
+
+    box-shadow:
+        0 18px 45px rgba(0,0,0,.35);
+
+    z-index: 50;
+
     max-height: 90vh;
     overflow-y: auto;
+
+    animation: gameOverAppear .35s cubic-bezier(.17,.89,.32,1.28);
+}
+
+
+/* Robin */
+
+.gameOverRobin {
+    font-size: 44px;
+
+    margin-bottom: 3px;
+
+    animation: robinBounce .7s ease-in-out infinite alternate;
+}
+
+
+/* Title */
+
+#gameOver h2 {
+    margin: 0;
+
+    font-size: 27px;
+    font-weight: 900;
+
+    color: #143766;
+}
+
+
+/* Score label */
+
+.finalScoreLabel {
+    margin: 14px 0 3px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1.5px;
+
+    color: #718096;
+}
+
+
+/* Main score */
+
+.finalScore {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    margin: 0 0 12px;
+
+    font-size: 58px;
+
+    line-height: 1;
+
+    font-weight: 900;
+
+    color: #143766;
+
+    text-shadow:
+        0 3px 0 rgba(59,130,208,.12);
+}
+
+.scoreStar {
+    font-size: 31px;
+
+    transform: translateY(-2px);
+
+    filter:
+        drop-shadow(0 2px 3px rgba(255,193,7,.35));
+}
+
+
+/* New high score */
+
+.newHighScore {
+    display: none;
+
+    margin: 8px auto 14px;
+
+    width: fit-content;
+
+    padding: 7px 13px;
+
+    border-radius: 999px;
+
+    background: #fff7d6;
+
+    color: #7a5a00;
+
+    font-size: 12px;
+
+    font-weight: 900;
+
+    box-shadow: none;
+
+    animation: highScorePulse 1s ease-in-out infinite alternate;
+}
+
+
+/* ============================================================
+   STATS
+   ============================================================ */
+
+.scoreStats {
+    display: grid;
+
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 8px;
+
+    margin: 14px 0 18px;
+}
+
+#gameOver .scoreStats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.scoreStat {
+    min-width: 0;
+
+    padding: 10px 4px;
+
+    border-radius: 15px;
+
+    background: #f1f6fc;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 2px;
+}
+
+.scoreStat span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 26px;
+    font-size: 19px;
+}
+
+.scoreStat small {
+    margin-top: 1px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    color: #718096;
+
+    white-space: nowrap;
+}
+
+.scoreStat strong {
+    font-size: 17px;
+
+    font-weight: 900;
+
+    color: #143766;
+}
+
+
+/* ============================================================
+   PLAY AGAIN
+   ============================================================ */
+
+#gameOver > button {
+    width: 100%;
+
+    padding: 13px 25px;
+
+    border: 0;
+
+    border-radius: 30px;
+
+    background: #3b82d0;
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 13px rgba(59,130,208,.35);
+
+    touch-action: manipulation;
+}
+
+#gameOver > button:active {
+    transform: scale(.96);
+}
+
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes gameOverAppear {
+
+    0% {
+        opacity: 0;
+        transform:
+            translate(-50%, -50%)
+            scale(.88);
+    }
+
+    100% {
+        opacity: 1;
+        transform:
+            translate(-50%, -50%)
+            scale(1);
+    }
+}
+
+@keyframes robinBounce {
+
+    from {
+        transform: translateY(0) rotate(-4deg);
+    }
+
+    to {
+        transform: translateY(-6px) rotate(4deg);
+    }
+}
+
+@keyframes highScorePulse {
+
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.04);
+    }
+}
+
+
+/* PANEL BUTTONS */
+
+#startScreen button,
+#gameOver button {
+
+    width: 100%;
+
+    padding: 12px 25px;
+
+    border: 0;
+
+    border-radius: 30px;
+
+    background: #3b82d0;
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 10px rgba(59,130,208,.4);
+
+    touch-action: manipulation;
+}
+
+#startScreen button:active,
+#gameOver button:active {
+
+    transform: scale(.96);
 }
 
 #startScreen h1 {
@@ -356,25 +713,6 @@ body{
     margin: 10px 0;
     line-height: 1.4;
     font-size: 14px;
-}
-
-#startScreen button, #gameOver button {
-    padding: 12px 30px;
-    border: 0;
-    border-radius: 30px;
-    background: #3b82d0;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(59, 130, 208, 0.4);
-    touch-action: manipulation;
-}
-
-#gameOver {
-    display: none;
-    z-index: 50;
-    font-size: 20px;
 }
 
 .comboDisplay {
@@ -470,194 +808,6 @@ body{
     color: #7a5a00;
     font-weight: 800;
     font-size: 15px;
-}
-
-#gameOver {
-    width: min(90%, 360px);
-    padding: 28px 24px 24px;
-    border-radius: 28px;
-
-    background:
-        linear-gradient(
-            180deg,
-            #ffffff 0%,
-            #f4f9ff 100%
-        );
-
-    box-shadow:
-        0 20px 60px rgba(0,0,0,.4),
-        0 0 0 2px rgba(255,255,255,.6);
-
-    text-align: center;
-
-    animation: gameOverAppear .4s cubic-bezier(.17,.89,.32,1.28);
-}
-
-@keyframes gameOverAppear {
-
-    0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(.7);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-
-}
-
-.gameOverRobin {
-    font-size: 52px;
-    margin-bottom: 4px;
-
-    animation: robinBounce .7s ease-in-out infinite alternate;
-}
-
-@keyframes robinBounce {
-
-    from {
-        transform: translateY(0) rotate(-4deg);
-    }
-
-    to {
-        transform: translateY(-8px) rotate(4deg);
-    }
-
-}
-
-#gameOver h2 {
-    margin: 0;
-    font-size: 28px;
-    color: #143766;
-}
-
-.finalScoreLabel {
-    margin: 18px 0 0;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #718096;
-}
-
-.finalScore {
-    margin: 2px 0 12px;
-
-    font-size: 58px;
-    line-height: 1;
-
-    font-weight: 900;
-    color: #143766;
-
-    text-shadow: 0 4px 0 rgba(59,130,208,.15);
-}
-
-.scoreStar {
-    font-size: 34px;
-}
-
-.newHighScore {
-    display: none;
-
-    margin: 12px auto 18px;
-    padding: 9px 16px;
-
-    width: fit-content;
-
-    border-radius: 999px;
-
-    background: linear-gradient(
-        135deg,
-        #fff3a6,
-        #ffd54a
-    );
-
-    color: #705400;
-
-    font-weight: 900;
-    font-size: 14px;
-
-    box-shadow:
-        0 5px 15px rgba(255,193,7,.25);
-
-    animation: highScorePulse 1s ease-in-out infinite alternate;
-}
-
-@keyframes highScorePulse {
-
-    from {
-        transform: scale(1);
-    }
-
-    to {
-        transform: scale(1.05);
-    }
-
-}
-
-.scoreStats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-
-    margin: 16px 0 22px;
-}
-
-.scoreStat {
-    padding: 10px 5px;
-
-    border-radius: 16px;
-
-    background: rgba(20,55,102,.06);
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.scoreStat span {
-    font-size: 20px;
-}
-
-.scoreStat small {
-    margin-top: 3px;
-
-    font-size: 10px;
-    font-weight: 700;
-
-    color: #718096;
-}
-
-.scoreStat strong {
-    margin-top: 2px;
-
-    font-size: 18px;
-    color: #143766;
-}
-
-#gameOver button {
-    width: 100%;
-    padding: 14px 30px;
-
-    border-radius: 999px;
-
-    background: linear-gradient(
-        135deg,
-        #3b82d0,
-        #2563a8
-    );
-
-    box-shadow:
-        0 7px 18px rgba(59,130,208,.35);
-
-    transition:
-        transform .15s ease,
-        box-shadow .15s ease;
-}
-
-#gameOver button:active {
-    transform: scale(.96);
 }
 
 #pauseBtn {
@@ -973,4 +1123,238 @@ body{
 
     background: #94a3b8;
 
+}
+
+.wormStatIcon {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.miniWorm {
+    position: relative;
+    width: 24px;
+    height: 18px;
+    transform: rotate(-12deg);
+}
+
+.miniWormBody {
+    position: absolute;
+    left: 2px;
+    top: 7px;
+    width: 22px;
+    height: 9px;
+    border-radius: 50%;
+    background: linear-gradient(
+        to right,
+        #e08282,
+        #f4a4a4 40%,
+        #e08282
+    );
+    border-bottom: 1px solid #c76666;
+}
+
+.miniWormHead {
+    position: absolute;
+    right: 0;
+    top: 1px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: linear-gradient(
+        135deg,
+        #f4a4a4,
+        #e08282
+    );
+    box-shadow:
+        inset 0 -2px 3px rgba(0,0,0,.12),
+        inset 0 2px 2px rgba(255,255,255,.3);
+    z-index: 2;
+}
+
+.miniWormHead::before,
+.miniWormHead::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: #3b2219;
+}
+
+.miniWormHead::before {
+    top: 3px;
+    left: 3px;
+}
+
+.miniWormHead::after {
+    top: 5px;
+    left: 7px;
+}
+
+.wormInstruction {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin: 3px 0;
+}
+
+.miniWorm {
+    position: relative;
+    display: inline-block;
+    width: 25px;
+    height: 30px;
+    flex-shrink: 0;
+}
+
+/* BODY */
+
+.miniWormBody {
+    position: absolute;
+    left: 7px;
+    top: 9px;
+    width: 15px;
+    height: 22px;
+    border-radius: 50%;
+    transform: rotate(18deg);
+
+    box-shadow:
+        inset 0 -2px 3px rgba(0,0,0,.15),
+        inset 0 2px 3px rgba(255,255,255,.3);
+}
+
+/* HEAD */
+
+.miniWormHead {
+    position: absolute;
+    left: 3px;
+    top: 1px;
+    width: 17px;
+    height: 15px;
+
+    border-radius: 50% 50% 40% 40%;
+
+    transform: rotate(-15deg);
+
+    z-index: 2;
+
+    box-shadow:
+        inset 0 -2px 3px rgba(0,0,0,.15),
+        inset 0 2px 3px rgba(255,255,255,.3);
+}
+
+/* EYES */
+
+.miniWormHead::before,
+.miniWormHead::after {
+    content: '';
+    position: absolute;
+
+    width: 2px;
+    height: 2px;
+
+    background: #3b2219;
+    border-radius: 50%;
+}
+
+.miniWormHead::before {
+    top: 4px;
+    left: 6px;
+}
+
+.miniWormHead::after {
+    top: 6px;
+    left: 11px;
+}
+
+
+/* =========================
+   PINK WORM
+   ========================= */
+
+.miniWorm.normal .miniWormBody {
+    background:
+        linear-gradient(
+            to right,
+            #e08282,
+            #f4a4a4 40%,
+            #e08282
+        );
+
+    border-bottom: 2px solid #c76666;
+}
+
+.miniWorm.normal .miniWormHead {
+    background:
+        linear-gradient(
+            135deg,
+            #f4a4a4,
+            #e08282
+        );
+}
+
+
+/* =========================
+   BLUE / FAST WORM
+   ========================= */
+
+.miniWorm.fast .miniWormBody {
+    background:
+        linear-gradient(
+            to right,
+            #38bdf8,
+            #bae6fd 40%,
+            #38bdf8
+        );
+
+    border-bottom: 2px solid #0284c7;
+}
+
+.miniWorm.fast .miniWormHead {
+    background:
+        linear-gradient(
+            135deg,
+            #bae6fd,
+            #38bdf8
+        );
+}
+
+
+/* =========================
+   GOLDEN WORM
+   ========================= */
+
+.miniWorm.golden .miniWormBody {
+    background:
+        linear-gradient(
+            to right,
+            #d4a337,
+            #fef08a 40%,
+            #d4a337
+        );
+
+    border-bottom: 2px solid #b58926;
+}
+
+.miniWorm.golden .miniWormHead {
+    background:
+        linear-gradient(
+            135deg,
+            #fef08a,
+            #d4a337
+        );
+}
+
+.miniWormBand {
+    position: absolute;
+    top: 5px;
+    left: 2px;
+    width: 14px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.45);
+    transform: rotate(-15deg);
 }
