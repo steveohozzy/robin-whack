@@ -471,3 +471,191 @@ body{
     font-weight: 800;
     font-size: 15px;
 }
+
+#gameOver {
+    width: min(90%, 360px);
+    padding: 28px 24px 24px;
+    border-radius: 28px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f4f9ff 100%
+        );
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.4),
+        0 0 0 2px rgba(255,255,255,.6);
+
+    text-align: center;
+
+    animation: gameOverAppear .4s cubic-bezier(.17,.89,.32,1.28);
+}
+
+@keyframes gameOverAppear {
+
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(.7);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+}
+
+.gameOverRobin {
+    font-size: 52px;
+    margin-bottom: 4px;
+
+    animation: robinBounce .7s ease-in-out infinite alternate;
+}
+
+@keyframes robinBounce {
+
+    from {
+        transform: translateY(0) rotate(-4deg);
+    }
+
+    to {
+        transform: translateY(-8px) rotate(4deg);
+    }
+
+}
+
+#gameOver h2 {
+    margin: 0;
+    font-size: 28px;
+    color: #143766;
+}
+
+.finalScoreLabel {
+    margin: 18px 0 0;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #718096;
+}
+
+.finalScore {
+    margin: 2px 0 12px;
+
+    font-size: 58px;
+    line-height: 1;
+
+    font-weight: 900;
+    color: #143766;
+
+    text-shadow: 0 4px 0 rgba(59,130,208,.15);
+}
+
+.scoreStar {
+    font-size: 34px;
+}
+
+.newHighScore {
+    display: none;
+
+    margin: 12px auto 18px;
+    padding: 9px 16px;
+
+    width: fit-content;
+
+    border-radius: 999px;
+
+    background: linear-gradient(
+        135deg,
+        #fff3a6,
+        #ffd54a
+    );
+
+    color: #705400;
+
+    font-weight: 900;
+    font-size: 14px;
+
+    box-shadow:
+        0 5px 15px rgba(255,193,7,.25);
+
+    animation: highScorePulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes highScorePulse {
+
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.05);
+    }
+
+}
+
+.scoreStats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+
+    margin: 16px 0 22px;
+}
+
+.scoreStat {
+    padding: 10px 5px;
+
+    border-radius: 16px;
+
+    background: rgba(20,55,102,.06);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scoreStat span {
+    font-size: 20px;
+}
+
+.scoreStat small {
+    margin-top: 3px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    color: #718096;
+}
+
+.scoreStat strong {
+    margin-top: 2px;
+
+    font-size: 18px;
+    color: #143766;
+}
+
+#gameOver button {
+    width: 100%;
+    padding: 14px 30px;
+
+    border-radius: 999px;
+
+    background: linear-gradient(
+        135deg,
+        #3b82d0,
+        #2563a8
+    );
+
+    box-shadow:
+        0 7px 18px rgba(59,130,208,.35);
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+}
+
+#gameOver button:active {
+    transform: scale(.96);
+}

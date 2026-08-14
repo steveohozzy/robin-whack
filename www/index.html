@@ -89,9 +89,48 @@
     <div id="ground"></div>
 
     <div id="gameOver">
-      <h2>🐦 Time's Up!</h2>
-      <p style="margin: 15px 0;">Score: <span id="finalScore">0</span> ⭐</p>
-      <button onclick="restartGame()">Play Again</button>
+
+        <div class="gameOverRobin">🐦</div>
+
+        <h2>Time's Up!</h2>
+
+        <p class="finalScoreLabel">Your Score</p>
+
+        <div class="finalScore">
+            <span id="finalScore">0</span>
+            <span class="scoreStar">⭐</span>
+        </div>
+
+        <div id="newHighScore" class="newHighScore">
+            🏆 NEW HIGH SCORE!
+        </div>
+
+        <div class="scoreStats">
+
+            <div class="scoreStat">
+                <span>🏆</span>
+                <small>Best</small>
+                <strong id="finalHighScore">0</strong>
+            </div>
+
+            <div class="scoreStat">
+                <span>🔥</span>
+                <small>Best Combo</small>
+                <strong id="finalCombo">0</strong>
+            </div>
+
+            <div class="scoreStat">
+                <span>📈</span>
+                <small>Level</small>
+                <strong id="finalLevel">1</strong>
+            </div>
+
+        </div>
+
+        <button onclick="restartGame()">
+            Play Again
+        </button>
+
     </div>
 
   </div>

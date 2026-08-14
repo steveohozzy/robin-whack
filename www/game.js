@@ -115,13 +115,17 @@ function showBonusText(text, color){
 }
 
 function endGame(){
+
     gameRunning = false;
 
     clearInterval(spawnTimer);
 
     playSound("gameover");
 
-    if (score > highScore) {
+    const isNewHighScore = score > highScore;
+
+    if(isNewHighScore){
+
         highScore = score;
 
         localStorage.setItem(
@@ -129,11 +133,50 @@ function endGame(){
             highScore
         );
 
-        document.getElementById("highScoreValue").textContent = highScore;
+        document.getElementById(
+            "highScoreValue"
+        ).textContent = highScore;
+
     }
 
     document.getElementById("finalScore").textContent = score;
-    document.getElementById("gameOver").style.display = "block";
+
+    document.getElementById(
+        "finalHighScore"
+    ).textContent = highScore;
+
+    document.getElementById(
+        "finalCombo"
+    ).textContent = maxCombo;
+
+    document.getElementById(
+        "finalLevel"
+    ).textContent = difficultyLevel;
+
+    const highScoreBanner =
+        document.getElementById("newHighScore");
+
+    if(isNewHighScore){
+
+        highScoreBanner.style.display = "block";
+
+        playSound("golden");
+
+        createHitParticles(
+            window.innerWidth / 2,
+            window.innerHeight / 2,
+            "golden"
+        );
+
+    } else {
+
+        highScoreBanner.style.display = "none";
+
+    }
+
+    document.getElementById(
+        "gameOver"
+    ).style.display = "block";
 }
 
 function targetHole(hole) {
@@ -397,6 +440,7 @@ function restartGame(){
     document.getElementById("scoreValue").textContent = score;
     timerDisplay.textContent = "⏱ " + timeLeft;
     document.getElementById("gameOver").style.display = "none";
+    document.getElementById("newHighScore").style.display = "none";
 
     holes.forEach(hole => {
         hole.occupied = false;
