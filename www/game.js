@@ -24,6 +24,9 @@ const COMBO_WINDOW = 1500;
 let highScore = Number(localStorage.getItem("robinWhackHighScore")) || 0;
 let difficultyLevel = 1;
 
+let gamePaused = false;
+let pausedAt = 0;
+
 document.getElementById("highScoreValue").textContent = highScore;
 
 // ============================================================
@@ -58,13 +61,24 @@ function playSound(name) {
 }
 
 const timerLoop = setInterval(() => {
-    if(!gameRunning || !gameStarted) return;
+
+    if(
+        !gameRunning ||
+        !gameStarted ||
+        gamePaused
+    ) {
+        return;
+    }
+
     timeLeft--;
-    timerDisplay.textContent = "⏱ " + timeLeft;
+
+    timerDisplay.textContent =
+        "⏱ " + timeLeft;
 
     if(timeLeft <= 0){
         endGame();
     }
+
 }, 1000);
 
 function startGame(){
@@ -78,6 +92,8 @@ function startGame(){
     document.getElementById("startScreen").style.display = "none";
 
     playSound("start");
+
+    gamePaused = false;
 }
 
 function addScore(points = 1){
@@ -359,70 +375,60 @@ function getCurrentUpTime(){
 }
 
 function spawnWorm(){
-    if(!gameRunning || !gameStarted) return;
 
-    const available = holes.filter(h => !h.occupied);
+    if(
+        !gameRunning ||
+        !gameStarted ||
+        gamePaused
+    ) {
+        return;
+    }
 
-    if(!available.length) return;
+    // rest of function...
+}
 
-    const hole = available[Math.floor(Math.random() * available.length)];
+function togglePause(){
 
-    // Give this worm spawn a unique ID
-    hole.spawnId++;
+    if(!gameRunning) return;
 
-    const thisSpawnId = hole.spawnId;
+    gamePaused = !gamePaused;
 
-    let chance = Math.random();
+    const pauseScreen =
+        document.getElementById("pauseScreen");
 
-    if(chance < 0.05){
-        // Golden
-        hole.type = "golden";
-        hole.points = 3;
+    if(gamePaused){
 
-    } else if(chance < 0.15){
-        // Fast
-        hole.type = "fast";
-        hole.points = 2;
+        pauseScreen.style.display = "block";
+
+        document.getElementById(
+            "pauseBtn"
+        ).textContent = "▶";
+
+        playSound("start");
 
     } else {
-        // Normal
-        hole.type = "normal";
-        hole.points = 1;
+
+        pauseScreen.style.display = "none";
+
+        document.getElementById(
+            "pauseBtn"
+        ).textContent = "⏸";
+
+        playSound("start");
+
     }
 
-    // Make absolutely sure old classes are removed
-    hole.worm.className = "worm-wrapper " + hole.type;
+}
 
-    // Force the browser to recognise this as a fresh worm
-    void hole.worm.offsetWidth;
+function restartFromPause(){
 
-    hole.worm.classList.add("up");
+    document.getElementById(
+        "pauseScreen"
+    ).style.display = "none";
 
-    hole.occupied = true;
+    gamePaused = false;
 
-    let disappearTime = getCurrentUpTime();
-
-    if(hole.type === "fast"){
-        disappearTime *= 0.7;
-    }
-
-    setTimeout(() => {
-
-        // Ignore this timeout if the hole has since
-        // been reused for another worm
-        if(hole.spawnId !== thisSpawnId){
-            return;
-        }
-
-        if(!hole.occupied){
-            return;
-        }
-
-        hole.worm.classList.remove("up");
-
-        hole.occupied = false;
-
-    }, disappearTime);
+    restartGame();
 }
 
 function restartGame(){
@@ -436,6 +442,8 @@ function restartGame(){
 
     difficultyLevel = 1;
     startSpawning();
+
+    gamePaused = false;
 
     document.getElementById("scoreValue").textContent = score;
     timerDisplay.textContent = "⏱ " + timeLeft;

@@ -72,12 +72,39 @@
         <button id="startBtn" onclick="startGame()">Start Game</button>
     </div>
 
+    <div id="pauseScreen">
+
+        <div class="pauseIcon">⏸</div>
+
+        <h2>Game Paused</h2>
+
+        <p>Take a breather, Robin!</p>
+
+        <button onclick="togglePause()">
+            ▶ Continue
+        </button>
+
+        <button
+            class="secondaryButton"
+            onclick="restartFromPause()"
+        >
+            ↻ Restart
+        </button>
+
+    </div>
+
     <div id="snow"></div>
 
     <div id="hud">
-      <div id="score">⭐ <span id="scoreValue">0</span></div>
-      <div id="combo" class="comboDisplay"></div>
-      <div id="timer">⏱ 60</div>
+        <div id="score">⭐ <span id="scoreValue">0</span></div>
+
+        <div id="combo" class="comboDisplay"></div>
+
+        <div id="timer">⏱ 60</div>
+
+        <button id="pauseBtn" onclick="togglePause()" aria-label="Pause game">
+            ⏸
+        </button>
     </div>
 
     <div id="holes"></div>
