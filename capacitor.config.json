@@ -1,5 +1,5 @@
 {
   "appId": "com.stevenhoskins.robinwhack",
   "appName": "Robin Whack",
-  "webDir": "."
+  "webDir": "www"
 }
