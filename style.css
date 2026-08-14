@@ -1,0 +1,378 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,sans-serif;
+    background:#0d2342;
+    touch-action: manipulation;
+}
+
+:root{
+    --scale:1;
+    --ground-bottom: 20px;
+    --ground-height: 220px;
+}
+
+/* PORTRAIT CUSTOMIZATIONS */
+@media (orientation: portrait) {
+    :root {
+        --ground-bottom: 10px;
+        --ground-height: 240px;
+    }
+}
+
+/* LANDSCAPE CUSTOMIZATIONS */
+@media (orientation: landscape) {
+    :root {
+        --ground-bottom: 5px;
+        --ground-height: 150px;
+    }
+}
+
+#game{
+    position:relative;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background: linear-gradient(to bottom, #143766 0%, #3b82d0 55%, #d8f3ff 100%);
+    cursor: pointer;
+}
+
+#ground{
+    position:absolute;
+    bottom:calc(var(--ground-bottom) * var(--scale));
+    left:0;
+    width:100%;
+    height:calc(var(--ground-height) * var(--scale));
+    background-image:url('https://www.thetoyshop.com/medias/edited-photo-55-.png?context=bWFzdGVyfHJvb3R8MTQxOTI5MHxpbWFnZS9wbmd8YURneEwyaG1PUzh4TWpnek1qRTRNVGcwTmpBME5pOWxaR2wwWldRdGNHaHZkRzhnS0RVMUtTNXdibWN8ZGU0NjU3ZWU0OTFhYTQ1ODJjZTg2MDNkMzJlOWQ2ZTMxMDYxMTdhOGJiOTgwMTQ0YzdlODdjOWJmNDQ1YjI0ZA');
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+    /* Smooth rolling hill */
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 260' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M0,90 C120,40 240,120 360,80 C500,35 620,110 760,70 C900,25 1040,95 1200,60 L1200,260 L0,260 Z'/%3E%3C/svg%3E");
+    -webkit-mask-size:100% 100%;
+    -webkit-mask-repeat:no-repeat;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 260' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M0,90 C120,40 240,120 360,80 C500,35 620,110 760,70 C900,25 1040,95 1200,60 L1200,260 L0,260 Z'/%3E%3C/svg%3E");
+    mask-size:100% 100%;
+    mask-repeat:no-repeat;
+
+    box-shadow:
+        inset 0 18px 40px rgba(255,255,255,0.9),
+        0 -10px 20px rgba(255,255,255,.45);
+
+    z-index:4;
+}
+
+#ground::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:78px;
+    background:linear-gradient(to bottom,#ffffff,#f3f9ff);
+
+    /* Wavy top and wavy bottom */
+    -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M0,48 C140,18 260,68 390,42 C540,12 670,72 820,36 C970,8 1090,48 1200,26 L1200,88 C1080,110 960,72 820,92 C660,114 520,76 360,98 C220,118 110,88 0,102 Z'/%3E%3C/svg%3E");
+    -webkit-mask-size:100% 100%;
+    -webkit-mask-repeat:no-repeat;
+    mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M0,48 C140,18 260,68 390,42 C540,12 670,72 820,36 C970,8 1090,48 1200,26 L1200,88 C1080,110 960,72 820,92 C660,114 520,76 360,98 C220,118 110,88 0,102 Z'/%3E%3C/svg%3E");
+    mask-size:100% 100%;
+    mask-repeat:no-repeat;
+
+    box-shadow:0 2px 6px rgba(255,255,255,.35);
+}
+
+@keyframes idle{
+    0%, 100%{ transform: translateX(-50%) translateY(0) scaleX(var(--dir)); }
+    50%{ transform: translateX(-50%) translateY(-4px) scaleX(var(--dir)); }
+}
+
+.flake{
+    position:absolute;
+    background:white;
+    border-radius:50%;
+    opacity:.8;
+    animation:snow linear infinite;
+    pointer-events: none;
+}
+
+@keyframes snow{
+    from{ transform: translateY(-50px); }
+    to{ transform: translateY(110vh); }
+}
+
+/* Hit Area for Tapping */
+.hole-hitarea {
+    position: absolute;
+    width: calc(85px * var(--scale));
+    height: calc(80px * var(--scale));
+    transform: translateX(-50%);
+    z-index: 6;
+    cursor: pointer;
+}
+
+.hole{
+    position:absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width:calc(50px * var(--scale));
+    height:calc(14px * var(--scale));
+    z-index: 5;
+    border-radius:50%;
+    background: radial-gradient(ellipse at center, #111 0%, #222 45%, #555 70%, transparent 75%);
+    box-shadow: 0 5px 10px rgba(0,0,0,.25);
+    pointer-events: none;
+}
+
+#robin{
+    position:absolute;
+    left:50%;
+    width:calc(95px * var(--scale));
+    z-index: 7;
+    transform: translateX(-50%);
+    --dir:1;
+    animation:idle .8s ease-in-out infinite;
+    transition: left 0.12s ease-out, filter 0.2s ease;
+    pointer-events: none;
+}
+
+#robin.peck{
+    animation: peck .18s;
+}
+
+@keyframes peck{
+    0%, 100%{ transform: translateX(-50%) scaleX(var(--dir)) rotate(0); }
+    50%{ transform: translateX(-50%) scaleX(var(--dir)) translateY(18px) rotate(25deg); }
+}
+
+/* WORM BASED ON PURE CSS (NO CANVAS) */
+.worm-wrapper {
+    position: absolute;
+    left: 50%;
+    bottom: calc(7px * var(--scale));
+    width: calc(50px * var(--scale));
+    height: 0;
+    transform: translateX(-50%);
+    z-index: 3;
+    pointer-events: none;
+    transition: height .2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.worm-container-inner {
+    position: absolute;
+    bottom: 0;
+    width: 50px;
+    height: 110px;
+    transform: scale(calc(0.42 * var(--scale)));
+    transform-origin: bottom center;
+}
+
+.worm-body {
+    position: absolute;
+    top: 20px;
+    left: 2px;
+    width: 50px;
+    height: 100px;
+}
+
+.segment {
+    position: absolute;
+    width: 45px;
+    height: 25px;
+    border-radius: 50%;
+    box-shadow: inset 0 -3px 4px rgba(0,0,0,0.15), inset 0 3px 4px rgba(255,255,255,0.3);
+}
+
+/* Normal worm colors (Default) */
+.worm-wrapper.normal .segment {
+    background: linear-gradient(to right, #e08282, #f4a4a4 40%, #e08282);
+    border-bottom: 2px solid #c76666;
+}
+.worm-wrapper.normal .head {
+    background: linear-gradient(135deg, #f4a4a4, #e08282);
+}
+.worm-wrapper.normal .head-band {
+    background: #fce1e1;
+}
+
+/* Golden worm variant */
+.worm-wrapper.golden .segment {
+    background: linear-gradient(to right, #d4a337, #fef08a 40%, #d4a337);
+    border-bottom: 2px solid #b58926;
+}
+.worm-wrapper.golden .head {
+    background: linear-gradient(135deg, #fef08a, #d4a337);
+}
+.worm-wrapper.golden .head-band {
+    background: #fffbeb;
+}
+
+/* Fast worm variant */
+.worm-wrapper.fast .segment {
+    background: linear-gradient(to right, #38bdf8, #bae6fd 40%, #38bdf8);
+    border-bottom: 2px solid #0284c7;
+}
+.worm-wrapper.fast .head {
+    background: linear-gradient(135deg, #bae6fd, #38bdf8);
+}
+.worm-wrapper.fast .head-band {
+    background: #e0f2fe;
+}
+
+/* Positioning CSS segments in a wavy path */
+.s1  { top: 0px;   left: 10px; transform: rotate(15deg); }
+.s2  { top: 15px;  left: 20px; transform: rotate(40deg); }
+.s3  { top: 32px;  left: 25px; transform: rotate(75deg); }
+.s4  { top: 52px;  left: 18px; transform: rotate(50deg); }
+.s5  { top: 70px;  left: 5px;  transform: rotate(15deg); }
+.s6  { top: 88px;  left: 2px;  transform: rotate(-10deg); }
+
+.head {
+    position: absolute;
+    top: -5px;
+    left: 5px;
+    width: 45px;
+    height: 38px;
+    border-radius: 50% 50% 40% 40%;
+    transform: rotate(-15deg);
+    box-shadow: inset 0 -4px 6px rgba(0,0,0,0.15), inset 0 3px 4px rgba(255,255,255,0.3);
+    z-index: 3;
+}
+
+.head-band {
+    position: absolute;
+    top: 12px;
+    left: 6px;
+    width: 38px;
+    height: 20px;
+    border-radius: 50%;
+    transform: rotate(-15deg);
+    z-index: 4;
+    box-shadow: inset 0 -2px 3px rgba(0,0,0,0.1);
+}
+
+.eye {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: #3b2219;
+    border-radius: 50%;
+    z-index: 5;
+}
+.eye1 { top: 12px; left: 16px; }
+.eye2 { top: 17px; left: 27px; }
+
+.mouth {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 7px;
+    height: 3px;
+    border-bottom: 2px solid #3b2219;
+    border-radius: 0 0 50% 50%;
+    transform: rotate(-15deg);
+    z-index: 5;
+}
+
+.worm-wrapper.up {
+    height: calc(85px * var(--scale));
+    animation: wiggle .35s infinite alternate ease-in-out;
+}
+
+@keyframes wiggle {
+    0% { transform: translateX(-50%) rotate(-4deg) scaleY(0.96); }
+    100% { transform: translateX(-50%) rotate(4deg) scaleY(1.04); }
+}
+
+.worm-wrapper.caught {
+    animation: wormCaught .35s forwards;
+}
+
+@keyframes wormCaught {
+    0% { transform: translateX(-50%) scale(1); opacity: 1; }
+    50% { transform: translateX(-50%) translateY(-35px) scale(1.3) rotate(20deg); opacity: 1; }
+    100% { transform: translateX(-50%) translateY(-70px) scale(.1); opacity: 0; }
+}
+
+@keyframes floatScore{
+    from{ transform:translateY(0); opacity:1; }
+    to{ transform:translateY(-60px); opacity:0; }
+}
+
+#hud {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    z-index: 10;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+#startScreen, #gameOver {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px 25px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 60;
+    box-shadow: 0 15px 40px rgba(0,0,0,.35);
+    width: 90%;
+    max-width: 340px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#startScreen h1 {
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.instructions {
+    margin: 10px 0;
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+#startScreen button, #gameOver button {
+    padding: 12px 30px;
+    border: 0;
+    border-radius: 30px;
+    background: #3b82d0;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(59, 130, 208, 0.4);
+    touch-action: manipulation;
+}
+
+#gameOver {
+    display: none;
+    z-index: 50;
+    font-size: 20px;
+}
