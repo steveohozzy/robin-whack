@@ -773,6 +773,8 @@ function toggleSound(){
 
 function toggleMusic(){
 
+    alert("Music button tapped");
+
     musicEnabled = !musicEnabled;
 
     localStorage.setItem(
